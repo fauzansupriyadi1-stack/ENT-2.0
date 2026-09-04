@@ -3,154 +3,114 @@
 @section('content')
 <div class="container">
     
+    @php
+        $featured = $allArticles->first();
+        $gridArticles = $allArticles->count() > 1 ? $allArticles->slice(1) : $allArticles;
+    @endphp
+
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" id="home">
         <div class="hero-content">
-            <span class="tag-new">NEW POST</span>
-            <h1 class="hero-title">Thoughts That Inspire, Stories That Connect.</h1>
-            <p class="hero-desc">Discover ideas, perspectives, and stories that inspire you to see the world differently.</p>
-            <div class="hero-actions">
-                <a href="#" class="btn-primary">Explore Articles <i class="fas fa-arrow-right ml-2" style="margin-left: 8px; font-size: 12px;"></i></a>
-                <a href="#" class="btn-outline">About Me</a>
+            <div class="tag-badge-row">
+                <span class="tag-new"><i class="fas fa-sparkles" style="margin-right: 4px;"></i> FEATURED STORY</span>
+                <span class="read-time-pill"><i class="far fa-clock"></i> {{ $featured ? $featured->read_time : '5 min read' }}</span>
             </div>
+            <h1 class="hero-title">Selamat Datang di FZAN NEWS</h1>
+            <p class="hero-desc">Temukan ide, perspektif, dan kisah kurasi yang menginspirasi hari-hari Anda dengan fokus baru dan kejelasan kreatif.</p>
         </div>
+
         <div class="hero-image-wrap">
-            <img src="https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?auto=format&fit=crop&q=80&w=1200" alt="Hero Image">
+            <img src="{{ $featured ? $featured->image : 'https://images.unsplash.com/photo-1517021897933-0e0319cfbc28?auto=format&fit=crop&q=80&w=1200' }}" alt="{{ $featured ? $featured->title : 'Featured Story' }}" class="hero-cover-img" loading="eager">
+            <div class="hero-overlay-gradient"></div>
             
-            <div class="hero-floating-card">
-                <span class="tag">LIFESTYLE</span>
-                <h3>Morning Habits for a Productive Mindset</h3>
-                <p>Simple routines that can transform your day and bring more clarity.</p>
-                <div class="hero-author">
-                    <div class="author-info">
-                        <img src="https://i.pravatar.cc/100?img=5" alt="Olivia Hart">
-                        <span>By Olivia Hart</span>
+            @if($featured)
+                <div class="hero-floating-card">
+                    <div class="floating-header">
+                        <span class="tag">{{ strtoupper($featured->category) }}</span>
+                        <button class="card-action-btn btn-like" data-id="hero" title="Like article">
+                            <i class="far fa-heart"></i> <span class="like-count">{{ $featured->likes }}</span>
+                        </button>
                     </div>
-                    <span class="author-date">May 10, 2024</span>
+                    <h3><a href="{{ route('article.show', $featured->slug) }}" style="color: inherit;">{{ $featured->title }}</a></h3>
+                    <p>{{ Str::limit($featured->excerpt, 100) }}</p>
+                    <div class="hero-author">
+                        <div class="author-info">
+                            <img src="{{ $featured->author_avatar ?: 'https://i.pravatar.cc/100?img=5' }}" alt="{{ $featured->author_name }}" class="author-avatar">
+                            <div>
+                                <span class="author-name">{{ $featured->author_name }}</span>
+                                <span class="author-role">{{ $featured->author_role ?: 'Editor' }}</span>
+                            </div>
+                        </div>
+                        <span class="author-date"><i class="far fa-calendar-alt"></i> {{ $featured->date }}</span>
+                    </div>
                 </div>
-            </div>
+            @endif
         </div>
     </section>
 
-    <!-- Categories Strip -->
-    <section class="category-strip">
-        <div class="cat-item">
-            <div class="cat-icon c1"><i class="far fa-clipboard"></i></div>
-            <div class="cat-text">
-                <h4>Lifestyle</h4>
-                <span>12 Posts</span>
-            </div>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon c2"><i class="fas fa-plane-departure"></i></div>
-            <div class="cat-text">
-                <h4>Travel</h4>
-                <span>10 Posts</span>
-            </div>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon c3"><i class="fas fa-spa"></i></div>
-            <div class="cat-text">
-                <h4>Personal Growth</h4>
-                <span>15 Posts</span>
-            </div>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon c4"><i class="far fa-lightbulb"></i></div>
-            <div class="cat-text">
-                <h4>Productivity</h4>
-                <span>10 Posts</span>
-            </div>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon c5"><i class="fas fa-laptop-code"></i></div>
-            <div class="cat-text">
-                <h4>Technology</h4>
-                <span>14 Posts</span>
-            </div>
-        </div>
-        <div class="cat-item">
-            <div class="cat-icon c6"><i class="far fa-heart"></i></div>
-            <div class="cat-text">
-                <h4>Health</h4>
-                <span>11 Posts</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Latest Articles -->
-    <section class="latest-articles mb-16">
+    <!-- Latest Articles Grid -->
+    <section class="latest-articles" id="latest">
         <div class="section-header">
-            <h2>Latest Articles</h2>
-            <a href="#" class="view-all">View All Articles <i class="fas fa-arrow-right"></i></a>
+            <div>
+                <h2>Artikel Terbaru</h2>
+                <p class="section-subtitle">Kumpulan cerita terbaik yang dikurasi khusus untuk Anda.</p>
+            </div>
+            <div class="section-filter-status">
+                <span id="active-filter-label">Menampilkan <strong>Semua Artikel</strong> ({{ $allArticles->count() }})</span>
+            </div>
         </div>
 
-        <div class="latest-grid">
-            <!-- Article 1 -->
-            <article class="article-card">
-                <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1544144433-d50aff500b91?auto=format&fit=crop&q=80&w=600" alt="Coffee">
-                </div>
-                <div class="card-body">
-                    <span class="card-tag">LIFESTYLE</span>
-                    <h3>The Power of Slow Mornings</h3>
-                    <p>Why slowing down in the morning can set the tone for a better day.</p>
-                    <div class="card-footer">
-                        <img src="https://i.pravatar.cc/100?img=5" alt="Olivia Hart">
-                        <span>By <strong>Olivia Hart</strong> &nbsp;&bull;&nbsp; May 8, 2024</span>
+        <div class="latest-grid" id="articles-grid">
+            @forelse($gridArticles as $article)
+                <article class="article-card" data-category="{{ Str::slug($article->category) }}" data-id="{{ $article->id }}">
+                    <div class="card-img-wrap">
+                        <img src="{{ $article->image }}" alt="{{ $article->title }}" loading="lazy">
+                        <span class="card-tag">{{ strtoupper($article->category) }}</span>
+                        <button class="btn-bookmark" aria-label="Save story" title="Save to bookmarks">
+                            <i class="far fa-bookmark"></i>
+                        </button>
                     </div>
-                </div>
-            </article>
-
-            <!-- Article 2 -->
-            <article class="article-card">
-                <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&q=80&w=600" alt="Lake">
-                </div>
-                <div class="card-body">
-                    <span class="card-tag">TRAVEL</span>
-                    <h3>10 Hidden Gems You Must Visit</h3>
-                    <p>Off-the-beaten-path destinations worth adding to your bucket list.</p>
-                    <div class="card-footer">
-                        <img src="https://i.pravatar.cc/100?img=11" alt="Liam Carter">
-                        <span>By <strong>Liam Carter</strong> &nbsp;&bull;&nbsp; May 6, 2024</span>
+                    <div class="card-body">
+                        <div class="card-meta">
+                            <span class="read-duration"><i class="far fa-clock"></i> {{ $article->read_time }}</span>
+                            <span class="post-date">{{ $article->date }}</span>
+                        </div>
+                        <h3 class="card-title">
+                            <a href="{{ route('article.show', $article->slug) }}">{{ $article->title }}</a>
+                        </h3>
+                        <p class="card-excerpt">{{ Str::limit($article->excerpt, 110) }}</p>
+                        <div class="card-footer">
+                            <div class="author-row">
+                                <img src="{{ $article->author_avatar ?: 'https://i.pravatar.cc/100?img=1' }}" alt="{{ $article->author_name }}" class="author-avatar-sm">
+                                <span class="author-by">Oleh <strong>{{ $article->author_name }}</strong></span>
+                            </div>
+                            <div class="card-interactions">
+                                <button class="btn-like" data-id="art-{{ $article->id }}" title="Like">
+                                    <i class="far fa-heart"></i> <span class="like-count">{{ $article->likes }}</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
+                </article>
+            @empty
+                <div style="grid-column: 1 / -1; text-align: center; padding: 48px 0; color: var(--c-text-muted);">
+                    <i class="fas fa-newspaper" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>
+                    <p>Belum ada artikel. Silakan tambahkan artikel dari Dashboard.</p>
                 </div>
-            </article>
-
-            <!-- Article 3 -->
-            <article class="article-card">
-                <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1484480974693-6ca0a78fb36b?auto=format&fit=crop&q=80&w=600" alt="Desk">
-                </div>
-                <div class="card-body">
-                    <span class="card-tag">PRODUCTIVITY</span>
-                    <h3>How to Stay Focused in a Distracted World</h3>
-                    <p>Practical tips to improve focus and get more done with less stress.</p>
-                    <div class="card-footer">
-                        <img src="https://i.pravatar.cc/100?img=5" alt="Olivia Hart">
-                        <span>By <strong>Olivia Hart</strong> &nbsp;&bull;&nbsp; May 4, 2024</span>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Article 4 -->
-            <article class="article-card">
-                <div class="card-img">
-                    <img src="https://images.unsplash.com/photo-1518531933037-91b2f5f229cc?auto=format&fit=crop&q=80&w=600" alt="Plant">
-                </div>
-                <div class="card-body">
-                    <span class="card-tag">PERSONAL GROWTH</span>
-                    <h3>Becoming the Best Version of You</h3>
-                    <p>Small steps every day lead to big changes over time.</p>
-                    <div class="card-footer">
-                        <img src="https://i.pravatar.cc/100?img=9" alt="Emma Lawson">
-                        <span>By <strong>Emma Lawson</strong> &nbsp;&bull;&nbsp; May 2, 2024</span>
-                    </div>
-                </div>
-            </article>
+            @endforelse
         </div>
     </section>
 
+</div>
+
+<!-- Article Detail Modal for interactive reading preview -->
+<div class="article-modal" id="article-modal">
+    <div class="article-modal-backdrop" id="article-modal-backdrop"></div>
+    <div class="article-modal-container">
+        <button class="article-modal-close" id="article-modal-close" aria-label="Close article"><i class="fas fa-times"></i></button>
+        <div class="article-modal-body" id="article-modal-content">
+            <!-- Populated dynamically by JS -->
+        </div>
+    </div>
 </div>
 @endsection

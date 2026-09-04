@@ -1,99 +1,84 @@
 @extends('layouts.app')
 
-@section('title', $article['title'] . ' | MAGZIN.')
+@section('title', $article->title . ' | FZAN NEWS')
 
 @section('content')
-<div class="container">
+<div class="container" style="max-width: 900px;">
     <div style="padding-top: 32px; padding-bottom: 16px;">
-        <a href="{{ route('home') }}" class="btn-search" style="display: inline-flex; width: auto; padding: 6px 16px; margin-bottom: 24px; border: 1px solid var(--border-subtle);">
-            <i class="fas fa-arrow-left"></i> <span>Back to Magazine</span>
+        <a href="{{ route('home') }}" class="btn-outline" style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 18px; margin-bottom: 24px;">
+            <i class="fas fa-arrow-left"></i> <span>Kembali ke Beranda</span>
         </a>
     </div>
 
     <article class="article-header">
-        <div class="card-top-meta" style="justify-content: flex-start; gap: 12px; margin-bottom: 20px;">
-            <span class="tag-pill" style="font-size: 13px; padding: 4px 14px;">{{ $article['category'] }}</span>
-            @if(isset($article['secondary_tag']))
-                <span class="tag-pill" style="font-size: 13px; padding: 4px 14px;">{{ $article['secondary_tag'] }}</span>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
+            <span class="tag-new" style="font-size: 12px;">{{ strtoupper($article->category) }}</span>
+            @if($article->secondary_tag)
+                <span class="read-time-pill" style="font-weight: 600;">#{{ $article->secondary_tag }}</span>
             @endif
-            <span style="color: var(--text-muted);">&bull;</span>
-            <span style="color: var(--text-muted); font-weight: 500;">{{ $article['date'] }}</span>
-            <span style="color: var(--text-muted);">&bull;</span>
-            <span style="color: var(--text-muted); font-weight: 500;">{{ $article['read_time'] }}</span>
+            <span style="color: var(--c-text-muted);">&bull;</span>
+            <span style="color: var(--c-text-muted); font-size: 14px;">{{ $article->date }}</span>
+            <span style="color: var(--c-text-muted);">&bull;</span>
+            <span style="color: var(--c-text-muted); font-size: 14px;"><i class="far fa-clock"></i> {{ $article->read_time }}</span>
         </div>
 
-        <h1 class="hero-title" style="text-align: left; margin-bottom: 24px;">{{ $article['title'] }}</h1>
+        <h1 class="hero-title" style="font-size: 42px; text-align: left; margin-bottom: 24px; line-height: 1.2;">{{ $article->title }}</h1>
 
-        <div class="author-row" style="margin-bottom: 32px; justify-content: flex-start; gap: 20px;">
-            <div class="author-info">
-                <img src="{{ $article['author']['avatar'] }}" alt="{{ $article['author']['name'] }}" class="author-avatar" style="width: 44px; height: 44px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; border-top: 1px solid var(--c-border); border-bottom: 1px solid var(--c-border); padding: 16px 0;">
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <img src="{{ $article->author_avatar ?: 'https://i.pravatar.cc/100?img=5' }}" alt="{{ $article->author_name }}" class="author-avatar" style="width: 48px; height: 48px;">
                 <div>
-                    <div style="font-weight: 700; color: var(--text-main);">{{ $article['author']['name'] }}</div>
-                    <div style="font-size: 12px; color: var(--text-muted);">{{ $article['author']['role'] ?? 'Author' }}</div>
+                    <div style="font-weight: 700; color: var(--c-text-main); font-size: 15px;">{{ $article->author_name }}</div>
+                    <div style="font-size: 13px; color: var(--c-text-muted);">{{ $article->author_role ?: 'Penulis' }}</div>
                 </div>
             </div>
 
-            <div style="display: flex; gap: 12px; margin-left: auto;">
-                <button class="btn-icon btn-bookmark" aria-label="Bookmark"><i class="far fa-bookmark"></i></button>
-                <button class="btn-icon" aria-label="Share article" onclick="navigator.clipboard.writeText(window.location.href); alert('Link copied to clipboard!');"><i class="fas fa-share-alt"></i></button>
+            <div style="display: flex; gap: 12px;">
+                <button class="btn-outline btn-like" data-id="show-{{ $article->id }}" title="Sukai Artikel" style="padding: 8px 16px;">
+                    <i class="far fa-heart"></i> <span class="like-count">{{ $article->likes }}</span>
+                </button>
+                <button class="btn-outline" aria-label="Bagikan artikel" onclick="navigator.clipboard.writeText(window.location.href); alert('Link berhasil disalin!');" style="padding: 8px 16px;">
+                    <i class="fas fa-share-alt"></i> Bagikan
+                </button>
             </div>
         </div>
 
-        <img src="{{ $article['image'] }}" alt="{{ $article['title'] }}" class="article-hero-image">
+        <div style="margin-bottom: 36px; border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-md);">
+            <img src="{{ $article->image }}" alt="{{ $article->title }}" style="width: 100%; max-height: 480px; object-fit: cover;">
+        </div>
 
-        <div class="article-content-body">
-            <p style="font-size: 20px; font-weight: 500; color: var(--text-main); border-left: 3px solid var(--c-teal); padding-left: 20px; margin-bottom: 32px;">
-                {{ $article['excerpt'] }}
+        <div style="font-size: 17px; line-height: 1.8; color: var(--c-text-main);">
+            <p style="font-size: 20px; font-weight: 500; color: var(--c-teal); border-left: 4px solid var(--c-teal); padding-left: 20px; margin-bottom: 32px; line-height: 1.6;">
+                {{ $article->excerpt }}
             </p>
 
-            <p>{{ $article['content'] }}</p>
-
-            <p>
-                As creative disciplines continue to converge, the intersection of digital craft, tactile heritage, and environmental consciousness is defining the next era of lifestyle culture. Leading institutions and independent ateliers alike are exploring new paradigms that honor both ancestral intelligence and machine learning.
-            </p>
-
-            <div style="background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 28px; margin: 40px 0;">
-                <h4 style="font-family: var(--font-heading); margin-bottom: 12px; color: var(--text-main);">Key Insights from this Edition:</h4>
-                <ul style="padding-left: 20px; color: var(--text-muted); line-height: 1.8;">
-                    <li>Harmonious balance between biological textiles and computational tailoring.</li>
-                    <li>Global resurgence in craft apprenticeships and community-led studios.</li>
-                    <li>The role of vibrant colors in shaping psychological well-being and visual storytelling.</li>
-                </ul>
+            <div style="white-space: pre-line;">
+                {!! nl2br(e($article->content)) !!}
             </div>
         </div>
     </article>
 
     <!-- Related Articles Section -->
     @if(count($relatedArticles) > 0)
-        <section style="margin-top: 40px; margin-bottom: 64px; border-top: 1px solid var(--border-subtle); padding-top: 48px;">
-            <div class="section-header-bar">
-                <div class="section-title-group">
-                    <i class="fas fa-sparkles section-badge-icon"></i>
-                    <h3 class="section-title">Related Stories</h3>
-                </div>
+        <section style="margin-top: 60px; margin-bottom: 64px; border-top: 1px solid var(--c-border); padding-top: 48px;">
+            <div style="margin-bottom: 28px;">
+                <h3 style="font-family: var(--font-serif); font-size: 28px; color: var(--c-text-main);">Artikel Terkait</h3>
             </div>
 
-            <div class="featured-grid">
+            <div class="latest-grid" style="grid-template-columns: repeat(3, 1fr);">
                 @foreach($relatedArticles as $related)
-                    <article class="featured-card" style="height: 440px;">
-                        <img src="{{ $related['image'] }}" alt="{{ $related['title'] }}" class="featured-card-bg" loading="lazy">
-                        
-                        <div class="featured-card-overlay">
-                            <div class="card-top-meta">
-                                <span class="tag-pill">{{ $related['category'] }}</span>
-                                <span style="font-size: 12px; color: var(--text-muted);">{{ $related['read_time'] }}</span>
+                    <article class="article-card">
+                        <div class="card-img-wrap" style="height: 180px;">
+                            <img src="{{ $related->image }}" alt="{{ $related->title }}" loading="lazy">
+                            <span class="card-tag">{{ strtoupper($related->category) }}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="card-meta">
+                                <span class="read-duration"><i class="far fa-clock"></i> {{ $related->read_time }}</span>
                             </div>
-
-                            <h3 class="card-headline">
-                                <a href="{{ route('article.show', $related['slug']) }}">{{ $related['title'] }}</a>
+                            <h3 class="card-title" style="font-size: 16px;">
+                                <a href="{{ route('article.show', $related->slug) }}">{{ $related->title }}</a>
                             </h3>
-
-                            <div class="card-footer-meta">
-                                <span style="font-size: 12px; color: var(--text-muted);">{{ $related['date'] }}</span>
-                                <a href="{{ route('article.show', $related['slug']) }}" class="btn-circle-arrow" aria-label="Read full story">
-                                    <i class="fas fa-arrow-right"></i>
-                                </a>
-                            </div>
                         </div>
                     </article>
                 @endforeach
