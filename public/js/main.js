@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Article Detail Modal Trigger
         const articleTrigger = e.target.closest('.article-detail-trigger') || e.target.closest('.card-img-wrap');
-        if (articleTrigger && !e.target.closest('.btn-bookmark') && !e.target.closest('.btn-like')) {
+        if (articleTrigger) {
             const card = e.target.closest('.article-card');
             if (card) {
                 e.preventDefault();

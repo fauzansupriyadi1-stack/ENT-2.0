@@ -107,7 +107,7 @@
                                         {{ $art->title }}
                                     </a>
                                     <span style="font-size: 12px; color: #64748b; display: inline-flex; align-items: center; gap: 6px;">
-                                        <i class="far fa-clock"></i> {{ $art->read_time }} &bull; <i class="far fa-heart" style="color: #e11d48;"></i> <span class="art-likes-count-{{ $art->id }}">{{ $art->likes }}</span> likes
+                                        <i class="far fa-clock"></i> {{ $art->read_time }}
                                     </span>
                                 </div>
                             </div>

@@ -34,9 +34,6 @@
             </div>
 
             <div style="display: flex; gap: 12px;">
-                <button class="btn-outline btn-like" data-id="show-{{ $article->id }}" title="Sukai Artikel" style="padding: 8px 16px;">
-                    <i class="far fa-heart"></i> <span class="like-count">{{ $article->likes }}</span>
-                </button>
                 <button class="btn-outline" aria-label="Bagikan artikel" onclick="navigator.clipboard.writeText(window.location.href); alert('Link berhasil disalin!');" style="padding: 8px 16px;">
                     <i class="fas fa-share-alt"></i> Bagikan
                 </button>

@@ -44,11 +44,11 @@
                             Kategori <i class="fas fa-chevron-down" style="font-size: 11px; margin-left: 4px;"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('/') }}#latest" class="dropdown-item"><i class="fas fa-leaf"></i> Lifestyle</a></li>
-                            <li><a href="{{ url('/') }}#latest" class="dropdown-item"><i class="fas fa-plane"></i> Travel</a></li>
-                            <li><a href="{{ url('/') }}#latest" class="dropdown-item"><i class="fas fa-bolt"></i> Productivity</a></li>
-                            <li><a href="{{ url('/') }}#latest" class="dropdown-item"><i class="fas fa-seedling"></i> Personal Growth</a></li>
-                            <li><a href="{{ url('/') }}#latest" class="dropdown-item"><i class="fas fa-laptop-code"></i> Technology</a></li>
+                            <li><a href="{{ url('/?category=Lifestyle#latest') }}" class="dropdown-item nav-cat-item" data-category="lifestyle"><i class="fas fa-leaf"></i> Lifestyle</a></li>
+                            <li><a href="{{ url('/?category=Travel#latest') }}" class="dropdown-item nav-cat-item" data-category="travel"><i class="fas fa-plane"></i> Travel</a></li>
+                            <li><a href="{{ url('/?category=Productivity#latest') }}" class="dropdown-item nav-cat-item" data-category="productivity"><i class="fas fa-bolt"></i> Productivity</a></li>
+                            <li><a href="{{ url('/?category=Personal Growth#latest') }}" class="dropdown-item nav-cat-item" data-category="personal-growth"><i class="fas fa-seedling"></i> Personal Growth</a></li>
+                            <li><a href="{{ url('/?category=Technology#latest') }}" class="dropdown-item nav-cat-item" data-category="technology"><i class="fas fa-laptop-code"></i> Technology</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a href="#latest" class="scroll-link">Latest Articles</a></li>
@@ -80,11 +80,11 @@
                 <li><a href="{{ url('/') }}" class="mobile-nav-link active"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="#latest" class="mobile-nav-link scroll-link"><i class="fas fa-newspaper"></i> Latest Articles</a></li>
                 <li style="padding: 10px 16px 4px; font-size: 11px; font-weight: 700; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.8px;">Kategori Berita</li>
-                <li><a href="{{ url('/') }}#latest" class="mobile-nav-link"><i class="fas fa-leaf"></i> Lifestyle</a></li>
-                <li><a href="{{ url('/') }}#latest" class="mobile-nav-link"><i class="fas fa-plane"></i> Travel</a></li>
-                <li><a href="{{ url('/') }}#latest" class="mobile-nav-link"><i class="fas fa-bolt"></i> Productivity</a></li>
-                <li><a href="{{ url('/') }}#latest" class="mobile-nav-link"><i class="fas fa-seedling"></i> Personal Growth</a></li>
-                <li><a href="{{ url('/') }}#latest" class="mobile-nav-link"><i class="fas fa-laptop-code"></i> Technology</a></li>
+                <li><a href="{{ url('/?category=Lifestyle#latest') }}" class="mobile-nav-link nav-cat-item" data-category="lifestyle"><i class="fas fa-leaf"></i> Lifestyle</a></li>
+                <li><a href="{{ url('/?category=Travel#latest') }}" class="mobile-nav-link nav-cat-item" data-category="travel"><i class="fas fa-plane"></i> Travel</a></li>
+                <li><a href="{{ url('/?category=Productivity#latest') }}" class="mobile-nav-link nav-cat-item" data-category="productivity"><i class="fas fa-bolt"></i> Productivity</a></li>
+                <li><a href="{{ url('/?category=Personal Growth#latest') }}" class="mobile-nav-link nav-cat-item" data-category="personal-growth"><i class="fas fa-seedling"></i> Personal Growth</a></li>
+                <li><a href="{{ url('/?category=Technology#latest') }}" class="mobile-nav-link nav-cat-item" data-category="technology"><i class="fas fa-laptop-code"></i> Technology</a></li>
                 <li><a href="#about" class="mobile-nav-link scroll-link"><i class="fas fa-user"></i> About</a></li>
                 <li><a href="{{ route('dashboard.index') }}" class="mobile-nav-link" style="color: var(--c-teal); font-weight: 600;"><i class="fas fa-sliders-h"></i> Dashboard</a></li>
             </ul>
@@ -164,12 +164,7 @@
                     <p class="footer-bio">
                         Thoughts that inspire, stories that connect. A curated collection of lifestyle, personal growth, productivity, and modern technology.
                     </p>
-                    <div class="footer-socials">
-                        <a href="#" aria-label="Twitter" class="social-btn"><i class="fab fa-x-twitter"></i></a>
-                        <a href="#" aria-label="Instagram" class="social-btn"><i class="fab fa-instagram"></i></a>
-                        <a href="#" aria-label="LinkedIn" class="social-btn"><i class="fab fa-linkedin-in"></i></a>
-                        <a href="#" aria-label="GitHub" class="social-btn"><i class="fab fa-github"></i></a>
-                    </div>
+
                 </div>
 
 

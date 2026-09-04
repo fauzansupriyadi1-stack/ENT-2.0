@@ -27,9 +27,6 @@
                 <div class="hero-floating-card">
                     <div class="floating-header">
                         <span class="tag">{{ strtoupper($featured->category) }}</span>
-                        <button class="card-action-btn btn-like" data-id="hero" title="Like article">
-                            <i class="far fa-heart"></i> <span class="like-count">{{ $featured->likes }}</span>
-                        </button>
                     </div>
                     <h3><a href="{{ route('article.show', $featured->slug) }}" style="color: inherit;">{{ $featured->title }}</a></h3>
                     <p>{{ Str::limit($featured->excerpt, 100) }}</p>
@@ -56,7 +53,14 @@
                 <p class="section-subtitle">Kumpulan cerita terbaik yang dikurasi khusus untuk Anda.</p>
             </div>
             <div class="section-filter-status">
-                <span id="active-filter-label">Menampilkan <strong>Semua Artikel</strong> ({{ $allArticles->count() }})</span>
+                @if(!empty($selectedCategory) && strtolower($selectedCategory) !== 'all')
+                    <span id="active-filter-label">Kategori: <strong>{{ ucfirst($selectedCategory) }}</strong> ({{ $gridArticles->count() }})</span>
+                    <a href="{{ url('/') }}#latest" class="reset-filter-btn" style="margin-left: 12px; font-size: 12px; background: var(--c-teal-light); color: var(--c-teal); padding: 5px 14px; border-radius: 99px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fas fa-times"></i> Reset Filter
+                    </a>
+                @else
+                    <span id="active-filter-label">Menampilkan <strong>Semua Artikel</strong> ({{ $allArticles->count() }})</span>
+                @endif
             </div>
         </div>
 
@@ -66,9 +70,6 @@
                     <div class="card-img-wrap">
                         <img src="{{ $article->image }}" alt="{{ $article->title }}" loading="lazy">
                         <span class="card-tag">{{ strtoupper($article->category) }}</span>
-                        <button class="btn-bookmark" aria-label="Save story" title="Save to bookmarks">
-                            <i class="far fa-bookmark"></i>
-                        </button>
                     </div>
                     <div class="card-body">
                         <div class="card-meta">
@@ -83,11 +84,6 @@
                             <div class="author-row">
                                 <img src="{{ $article->author_avatar ?: 'https://i.pravatar.cc/100?img=1' }}" alt="{{ $article->author_name }}" class="author-avatar-sm">
                                 <span class="author-by">Oleh <strong>{{ $article->author_name }}</strong></span>
-                            </div>
-                            <div class="card-interactions">
-                                <button class="btn-like" data-id="art-{{ $article->id }}" title="Like">
-                                    <i class="far fa-heart"></i> <span class="like-count">{{ $article->likes }}</span>
-                                </button>
                             </div>
                         </div>
                     </div>

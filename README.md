@@ -1,60 +1,202 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 📰 FZAN NEWS — Portal Berita Modern & Panel Dashboard Admin
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Thoughts That Inspire, Stories That Connect.**  
+> Platform portal berita modern, elegan, responsif, dan dinamis berbasis Laravel dengan Panel Dashboard Manajemen Artikel secara Real-Time.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✨ Fitur Utama
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 📰 1. Portal Berita (Front-End User)
+- **Hero Section Featured Story**: Menampilkan cerita unggulan terbaru dari database secara otomatis.
+- **Navigasi Kategori Dropdown**: Navbar desktop memiliki dropdown *Kategori* berisi (*Lifestyle, Travel, Productivity, Personal Growth, Technology*) — klik salah satu untuk memfilter artikel.
+- **Filter Kategori Berita**: Halaman utama menampilkan artikel sesuai kategori yang dipilih dari navbar, lengkap dengan info jumlah artikel dan tombol *Reset Filter*.
+- **Grid Artikel dengan `@forelse`**: Semua artikel (selain featured utama) ditampilkan dalam grid responsif berbasis `@forelse` Blade.
+- **Halaman Detail Berita**: Halaman lengkap artikel dengan konten penuh, info penulis, kategori, dan read time.
+- **Pencarian Global (Search Modal)**: Fitur pencarian artikel secara instan melalui modal overlay.
+- **Responsif Sepenuhnya**: Desain adaptif untuk desktop, tablet, dan smartphone dengan *Mobile Drawer Navigation* termasuk daftar kategori.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 🎛️ 2. Panel Dashboard Admin (Back-End Management)
+- **Manajemen CRUD Artikel Lengkap**: Tambah artikel baru, edit isi berita, dan hapus artikel secara instan.
+- **Live Side-by-Side Editor Preview**: Pratinjau langsung kartu berita secara real-time saat mengetik judul, excerpt, atau memasukkan URL gambar.
+- **Statistik Real-Time (Auto-Sync API)**: Penghitung *Total Artikel* & *Kategori Berita* terhubung otomatis ke database via API polling setiap 3 detik.
+- **Filter Kategori & Pencarian Tabel**: Filter artikel per kategori dan pencarian instan di tabel dashboard.
+- **Pratinjau Modal Artikel**: Tombol *Intip* untuk membuka pratinjau artikel langsung dari tabel dashboard tanpa berpindah halaman.
+- **Sidebar Responsive Drawer**: Navigasi admin dengan animasi smooth & tombol menu toggle untuk perangkat mobile.
 
-## Learning Laravel
+### 🔐 3. Sistem Autentikasi Login
+- Halaman Login terdedikasi pada endpoint `/login`.
+- Kredensial Admin default telah tersedia untuk pengujian lokal.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+---
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+## 🛠️ Teknologi yang Digunakan
 
-## Laravel Sponsors
+| Komponen | Detail |
+|---|---|
+| **Framework Core** | PHP 8.x + Laravel 11 / 10 |
+| **Database** | SQLite (dapat disesuaikan ke MySQL / PostgreSQL) |
+| **Template Engine** | Laravel Blade |
+| **Styling** | Vanilla CSS3 — Flexbox, Grid, Glassmorphism, Micro-Animations |
+| **Typography & Icons** | Playfair Display, Inter — Font Awesome 6 |
+| **Scripting** | JavaScript ES6 — Fetch API, Live DOM Manipulation |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+---
 
-### Premium Partners
+## ⚙️ Cara Penginstalan & Panduan Jalankan (Dari Awal s/d Akhir)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+> **Prasyarat:** Pastikan komputer Anda sudah terpasang **PHP 8.x**, **Composer**, dan **Git**.
 
-## Contributing
+---
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Langkah 1 — Clone Repository
 
-## Code of Conduct
+Buka terminal / Command Prompt, lalu jalankan:
+```bash
+git clone https://github.com/username-anda/ENT-PROJECT-V2.git
+cd ENT-PROJECT-V2
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+### Langkah 2 — Install Dependensi PHP (Composer)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+composer install
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# ENT-2.0
+### Langkah 3 — Konfigurasi File Environment (`.env`)
+
+Salin file `.env.example` menjadi `.env`:
+
+```bash
+# Windows PowerShell:
+cp .env.example .env
+
+# Atau salin manual: duplikat file .env.example, lalu rename menjadi .env
+```
+
+---
+
+### Langkah 4 — Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+---
+
+### Langkah 5 — Setup Database SQLite
+
+Proyek ini menggunakan **SQLite** secara default. Pastikan baris berikut ada di file `.env`:
+
+```env
+DB_CONNECTION=sqlite
+```
+
+Buat file database SQLite kosong jika belum ada:
+
+```bash
+# Windows PowerShell:
+New-Item -ItemType File -Path database/database.sqlite -Force
+
+# Linux / macOS / Git Bash:
+touch database/database.sqlite
+```
+
+---
+
+### Langkah 6 — Jalankan Migrasi & Seeder
+
+Perintah ini akan membuat semua tabel dan mengisi data artikel awal serta akun admin:
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+---
+
+### Langkah 7 — Jalankan Server Lokal
+
+```bash
+php artisan serve
+```
+
+Buka browser dan akses:
+
+👉 **`http://127.0.0.1:8000`**
+
+---
+
+## 🔑 Kredensial Login Admin Default
+
+Akses Panel Dashboard di [`http://127.0.0.1:8000/dashboard`](http://127.0.0.1:8000/dashboard)  
+Atau login terlebih dahulu di [`http://127.0.0.1:8000/login`](http://127.0.0.1:8000/login):
+
+| Field | Value |
+|---|---|
+| **Email** | `admin@fzannews.com` |
+| **Password** | `password` |
+
+---
+
+## 🗺️ Daftar Route
+
+| Method | URL | Deskripsi |
+|---|---|---|
+| `GET` | `/` | Halaman beranda portal berita |
+| `GET` | `/?category=Lifestyle` | Filter artikel berdasarkan kategori |
+| `GET` | `/article/{slug}` | Halaman detail berita |
+| `GET` | `/login` | Halaman login admin |
+| `POST` | `/login` | Proses autentikasi login |
+| `POST` | `/logout` | Logout admin |
+| `GET` | `/dashboard` | Panel kelola artikel (CRUD) |
+| `GET` | `/dashboard/articles/create` | Form tambah artikel baru |
+| `POST` | `/dashboard/articles` | Simpan artikel baru |
+| `GET` | `/dashboard/articles/{id}/edit` | Form edit artikel |
+| `PUT` | `/dashboard/articles/{id}` | Update artikel |
+| `DELETE` | `/dashboard/articles/{id}` | Hapus artikel |
+| `GET` | `/api/stats` | API statistik real-time |
+
+---
+
+## 📁 Struktur Direktori Penting
+
+```text
+ENT-PROJECT V2/
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── AuthController.php        # Handler Login & Logout
+│   │   ├── DashboardController.php   # Handler CRUD Artikel & Real-Time Stats API
+│   │   └── HomeController.php        # Handler Beranda & Detail Berita + Filter Kategori
+│   └── Models/
+│       ├── Article.php               # Model Eloquent Artikel Berita
+│       └── User.php                  # Model Eloquent User Admin
+├── database/
+│   ├── migrations/                   # Skema tabel database
+│   ├── seeders/                      # Seeder data awal (ArticleSeeder & DatabaseSeeder)
+│   └── database.sqlite               # Database SQLite lokal
+├── public/
+│   ├── css/style.css                 # Main Custom CSS Design System
+│   └── js/main.js                    # Script interaktif UI & Fetch API
+├── resources/views/
+│   ├── articles/show.blade.php       # Halaman Detail Berita Lengkap
+│   ├── auth/login.blade.php          # Halaman Login Admin
+│   ├── dashboard/
+│   │   ├── layout.blade.php          # Layout sidebar panel admin
+│   │   ├── index.blade.php           # Tabel kelola artikel + filter + stats
+│   │   └── form.blade.php            # Form tambah/edit artikel + live preview
+│   ├── layouts/app.blade.php         # Layout utama portal (navbar, footer)
+│   └── welcome.blade.php             # Halaman Beranda FZAN NEWS
+└── routes/
+    └── web.php                       # Semua definisi Route (Portal, Dashboard, Auth, API)
+```
+
+---
+
+## 📝 Lisensi & Hak Cipta
+
+© 2026 **FZAN NEWS.** Hak cipta dilindungi undang-undang.  
+Lisensi di bawah [MIT License](LICENSE).

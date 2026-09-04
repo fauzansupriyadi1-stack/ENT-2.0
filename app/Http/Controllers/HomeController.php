@@ -10,16 +10,17 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+        $selectedCategory = $request->query('category');
+
         $allArticles = Article::latest()->get();
 
-        // If DB is empty for some reason, fallback gracefully
-        if ($allArticles->isEmpty()) {
-            $heroArticles = collect();
-            $latestArticles = collect();
+        if (!empty($selectedCategory) && strtolower($selectedCategory) !== 'all') {
+            $gridArticles = Article::where('category', 'like', "%{$selectedCategory}%")->latest()->get();
         } else {
-            $heroArticles = $allArticles->take(3);
-            $latestArticles = $allArticles;
+            $gridArticles = $allArticles->count() > 1 ? $allArticles->slice(1) : $allArticles;
         }
+
+        $heroArticles = $allArticles->take(3);
 
         $categoriesList = Article::select('category')->distinct()->pluck('category');
         $categories = $categoriesList->map(function ($catName) {
@@ -32,9 +33,10 @@ class HomeController extends Controller
 
         return view('welcome', compact(
             'heroArticles',
-            'latestArticles',
+            'gridArticles',
             'categories',
-            'allArticles'
+            'allArticles',
+            'selectedCategory'
         ));
     }
 
@@ -43,7 +45,6 @@ class HomeController extends Controller
         $article = Article::where('slug', $slug)->first();
 
         if (!$article) {
-            // fallback by ID if slug not found
             $article = Article::find($slug);
         }
 
