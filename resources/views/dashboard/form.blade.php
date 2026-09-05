@@ -19,7 +19,7 @@
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; align-items: start;">
     <!-- Form Card -->
     <div style="background: #ffffff; border-radius: 16px; padding: 28px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
-        <form action="{{ $isEdit ? route('dashboard.update', $article->id) : route('dashboard.store') }}" method="POST">
+        <form action="{{ $isEdit ? route('dashboard.update', $article->id) : route('dashboard.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if($isEdit)
                 @method('PUT')
@@ -88,21 +88,38 @@
                     </div>
                 </div>
 
-                <!-- URL Gambar -->
+                <!-- Gambar Sampul (Upload File / URL) -->
                 <div>
                     <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #0f172a;">
-                        URL Gambar Sampul (Unsplash / Link Gambar)
+                        Gambar Sampul Artikel
                     </label>
-                    <input type="url" name="image" id="formImageInput" value="{{ old('image', $article->image) }}" placeholder="https://images.unsplash.com/..." style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; font-family: inherit;">
+
+                    <!-- Area Upload File -->
+                    <div id="dropZone" style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 20px; text-align: center; background: #f8fafc; cursor: pointer; transition: all 0.2s;" onclick="document.getElementById('formImageFileInput').click();">
+                        <input type="file" name="image_file" id="formImageFileInput" accept="image/*" style="display: none;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 28px; color: var(--c-teal, #076653); margin-bottom: 8px;"></i>
+                        <p style="margin: 0; font-weight: 600; font-size: 14px; color: #334155;" id="uploadFileName">Klik atau seret file gambar ke sini</p>
+                        <p style="margin: 4px 0 0 0; font-size: 12px; color: #64748b;">Format: JPG, PNG, WEBP, GIF (Maks. 5MB)</p>
+                    </div>
+                    @error('image_file')
+                        <span style="color: #ef4444; font-size: 12.5px; margin-top: 4px; display: block;">{{ $message }}</span>
+                    @enderror
+
+                    <!-- Divider Atau -->
+                    <div style="display: flex; align-items: center; margin: 12px 0; gap: 12px;">
+                        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+                        <span style="font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Atau Link URL</span>
+                        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+                    </div>
+
+                    <!-- URL Input -->
+                    <input type="text" name="image" id="formImageInput" value="{{ old('image', $article->image) }}" placeholder="https://images.unsplash.com/..." style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; font-family: inherit;">
+                    @error('image')
+                        <span style="color: #ef4444; font-size: 12.5px; margin-top: 4px; display: block;">{{ $message }}</span>
+                    @enderror
                 </div>
 
-                <!-- Excerpt -->
-                <div>
-                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #0f172a;">
-                        Ringkasan Excerpt <span style="color: #ef4444;">*</span>
-                    </label>
-                    <textarea name="excerpt" id="formExcerptInput" rows="3" required placeholder="Tuliskan ringkasan singkat 1-2 kalimat..." style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; font-family: inherit; resize: vertical;">{{ old('excerpt', $article->excerpt) }}</textarea>
-                </div>
+
 
                 <!-- Content -->
                 <div>
@@ -165,7 +182,16 @@
     const categorySelect = document.getElementById('formCategorySelect');
     const authorInput = document.getElementById('formAuthorInput');
     const imageInput = document.getElementById('formImageInput');
-    const excerptInput = document.getElementById('formExcerptInput');
+    const imageFileInput = document.getElementById('formImageFileInput');
+    const uploadFileName = document.getElementById('uploadFileName');
+    const dropZone = document.getElementById('dropZone');
+    const contentInput = document.getElementById('formContentInput');
+
+    function getAutoExcerpt(text) {
+        const stripped = text.replace(/<[^>]*>/g, '').trim();
+        const words = stripped.split(/\s+/).filter(w => w.length > 0);
+        return words.slice(0, 10).join(' ') + (words.length > 10 ? '...' : '');
+    }
 
     const pTitle = document.getElementById('previewTitle');
     const pCategory = document.getElementById('previewCategory');
@@ -191,6 +217,44 @@
         });
     }
 
+    if (imageFileInput) {
+        imageFileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                uploadFileName.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> <strong>${file.name}</strong> (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                pImage.src = URL.createObjectURL(file);
+            }
+        });
+    }
+
+    if (dropZone) {
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.borderColor = 'var(--c-teal, #076653)';
+                dropZone.style.background = '#f0fdf4';
+            }, false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                dropZone.style.borderColor = '#cbd5e1';
+                dropZone.style.background = '#f8fafc';
+            }, false);
+        });
+        dropZone.addEventListener('drop', (e) => {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files && files.length > 0) {
+                imageFileInput.files = files;
+                const event = new Event('change');
+                imageFileInput.dispatchEvent(event);
+            }
+        });
+    }
+
     if (imageInput) {
         imageInput.addEventListener('input', (e) => {
             if (e.target.value) {
@@ -199,9 +263,10 @@
         });
     }
 
-    if (excerptInput) {
-        excerptInput.addEventListener('input', (e) => {
-            pExcerpt.innerText = e.target.value || 'Ringkasan singkat...';
+    if (contentInput) {
+        contentInput.addEventListener('input', (e) => {
+            const auto = getAutoExcerpt(e.target.value);
+            pExcerpt.innerText = auto || 'Ringkasan singkat akan otomatis muncul dari 10 kata pertama konten...';
         });
     }
 </script>

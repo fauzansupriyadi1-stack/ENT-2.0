@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class Article extends Model
 {
@@ -25,6 +26,29 @@ class Article extends Model
         'image',
         'likes'
     ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    /**
+     * Waktu relatif: "2 jam lalu", "baru saja", dst.
+     */
+    public function getTimeAgoAttribute(): string
+    {
+        $timestamp = $this->created_at ?? ($this->date ? Carbon::parse($this->date) : now());
+        return Carbon::parse($timestamp)->locale('id')->diffForHumans();
+    }
+
+    /**
+     * Tanggal format panjang: "5 Sep 2026, 12:04"
+     */
+    public function getFormattedDateAttribute(): string
+    {
+        $timestamp = $this->created_at ?? ($this->date ? Carbon::parse($this->date) : now());
+        return Carbon::parse($timestamp)->locale('id')->translatedFormat('d M Y, H:i');
+    }
 
     protected static function boot()
     {

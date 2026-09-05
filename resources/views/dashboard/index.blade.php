@@ -55,32 +55,47 @@
     </div>
 </div>
 
-<!-- Category Filter Pills & Instant Search -->
+<!-- Category Filter Pills & Search (Server-side) -->
+<form method="GET" action="{{ route('dashboard.index') }}" id="filterForm">
 <div style="background: #ffffff; border-radius: 16px; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #e2e8f0; margin-bottom: 24px;">
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 20px;">
-        <!-- Category Pills -->
+        <!-- Category Pills (Dinamis dari Database) -->
         <div style="display: flex; flex-wrap: wrap; gap: 8px;" id="categoryFilterPills">
-            <button class="filter-pill active" data-cat="all" style="padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; border: 1.5px solid var(--c-teal); background: var(--c-teal); color: #fff; cursor: pointer; transition: all 0.2s;">
+            <a href="{{ route('dashboard.index', array_filter(['search' => $activeSearch])) }}"
+               class="filter-pill {{ $activeCategory === 'all' || $activeCategory === '' ? 'active' : '' }}"
+               style="padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none;
+                      {{ $activeCategory === 'all' || $activeCategory === '' ? 'border: 1.5px solid var(--c-teal); background: var(--c-teal); color: #fff;' : 'border: 1.5px solid #cbd5e1; background: #fff; color: #475569;' }}">
                 Semua Artikel
-            </button>
-            <button class="filter-pill" data-cat="lifestyle" style="padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; cursor: pointer; transition: all 0.2s;">
-                Lifestyle
-            </button>
-            <button class="filter-pill" data-cat="travel" style="padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; cursor: pointer; transition: all 0.2s;">
-                Travel
-            </button>
-            <button class="filter-pill" data-cat="productivity" style="padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; cursor: pointer; transition: all 0.2s;">
-                Productivity
-            </button>
-            <button class="filter-pill" data-cat="technology" style="padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; border: 1.5px solid #cbd5e1; background: #fff; color: #475569; cursor: pointer; transition: all 0.2s;">
-                Technology
-            </button>
+            </a>
+            @foreach($categories as $cat)
+                <a href="{{ route('dashboard.index', array_filter(['category' => $cat, 'search' => $activeSearch])) }}"
+                   class="filter-pill {{ strtolower($activeCategory) === strtolower($cat) ? 'active' : '' }}"
+                   style="padding: 6px 16px; border-radius: 99px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s; text-decoration: none;
+                          {{ strtolower($activeCategory) === strtolower($cat) ? 'border: 1.5px solid var(--c-teal); background: var(--c-teal); color: #fff;' : 'border: 1.5px solid #cbd5e1; background: #fff; color: #475569;' }}">
+                    {{ ucfirst($cat) }}
+                </a>
+            @endforeach
         </div>
 
-        <!-- Instant Search Bar -->
-        <div style="position: relative; min-width: 280px;">
-            <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
-            <input type="text" id="tableSearchInput" placeholder="Cari judul artikel/penulis..." style="width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13.5px; outline: none; transition: all 0.2s;">
+        <!-- Search Bar (Server-side) -->
+        <div style="position: relative; min-width: 280px; display: flex; gap: 8px; align-items: center;">
+            <div style="position: relative; flex: 1;">
+                <i class="fas fa-search" style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 14px;"></i>
+                <input type="text" name="search" id="tableSearchInput" value="{{ $activeSearch }}"
+                       placeholder="Cari judul artikel/penulis..."
+                       style="width: 100%; padding: 10px 14px 10px 38px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 13.5px; outline: none; transition: all 0.2s; box-sizing: border-box;">
+                @if(!empty($activeCategory) && $activeCategory !== 'all')
+                    <input type="hidden" name="category" value="{{ $activeCategory }}">
+                @endif
+            </div>
+            <button type="submit" style="padding: 10px 18px; background: var(--c-teal); color: #fff; border: none; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; white-space: nowrap;">
+                <i class="fas fa-search"></i> Cari
+            </button>
+            @if(!empty($activeSearch) || (!empty($activeCategory) && $activeCategory !== 'all'))
+                <a href="{{ route('dashboard.index') }}" style="padding: 10px 14px; background: #f1f5f9; color: #64748b; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; white-space: nowrap;">
+                    <i class="fas fa-times"></i> Reset
+                </a>
+            @endif
         </div>
     </div>
 
@@ -121,11 +136,15 @@
                             {{ $art->author_name }}
                         </td>
                         <td style="padding: 16px; color: #64748b; font-size: 13px;">
-                            {{ $art->date }}
+                            <span title="{{ $art->formatted_date }}" style="cursor: default;"
+                                  class="article-time-ago"
+                                  data-created="{{ $art->created_at?->toIso8601String() }}">
+                                {{ $art->time_ago }}
+                            </span>
                         </td>
                         <td style="padding: 16px; text-align: right;">
                             <div style="display: inline-flex; gap: 8px;">
-                                <button type="button" class="btn-preview-modal" data-title="{{ e($art->title) }}" data-category="{{ e($art->category) }}" data-image="{{ e($art->image) }}" data-excerpt="{{ e($art->excerpt) }}" data-content="{{ e($art->content) }}" data-author="{{ e($art->author_name) }}" data-date="{{ e($art->date) }}" style="background: #f1f5f9; color: #475569; padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s;">
+                                <button type="button" class="btn-preview-modal" data-title="{{ e($art->title) }}" data-category="{{ e($art->category) }}" data-image="{{ e($art->image) }}" data-excerpt="{{ e($art->excerpt) }}" data-content="{{ e($art->content) }}" data-author="{{ e($art->author_name) }}" data-date="{{ e($art->formatted_date) }}" style="background: #f1f5f9; color: #475569; padding: 7px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s;">
                                     <i class="fas fa-eye"></i> Intip
                                 </button>
 
@@ -159,6 +178,7 @@
         {{ $articles->links() }}
     </div>
 </div>
+</form>
 
 <!-- Interactive Live Article Preview Modal -->
 <div id="previewModal" style="display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(6px); z-index: 999; align-items: center; justify-content: center; padding: 20px;">
@@ -205,46 +225,50 @@
     // Auto poll every 3 seconds for live real-time sync
     setInterval(fetchRealtimeStats, 3000);
 
-    // 2. Instant Client-side Search Filter
+    // 2. Search input — submit form on Enter
     const searchInput = document.getElementById('tableSearchInput');
-    const tableRows = document.querySelectorAll('.article-row');
-
     if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-            const val = e.target.value.toLowerCase().trim();
-            tableRows.forEach(row => {
-                const text = row.innerText.toLowerCase();
-                row.style.display = text.includes(val) ? '' : 'none';
-            });
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                document.getElementById('filterForm').submit();
+            }
         });
     }
 
-    // 3. Category Filter Pills
-    const filterPills = document.querySelectorAll('.filter-pill');
-    filterPills.forEach(pill => {
-        pill.addEventListener('click', () => {
-            filterPills.forEach(p => {
-                p.style.background = '#fff';
-                p.style.color = '#475569';
-                p.style.borderColor = '#cbd5e1';
-                p.classList.remove('active');
-            });
-            pill.style.background = 'var(--c-teal)';
-            pill.style.color = '#fff';
-            pill.style.borderColor = 'var(--c-teal)';
-            pill.classList.add('active');
+    // 3. Category filter pills are now server-side (via <a> tags), no JS needed.
 
-            const selectedCategory = pill.getAttribute('data-cat');
-            tableRows.forEach(row => {
-                const rowCat = row.getAttribute('data-category');
-                if (selectedCategory === 'all' || rowCat === selectedCategory) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+    // 5. Realtime Time Ago — update setiap 60 detik
+    function timeAgo(isoString) {
+        const now = new Date();
+        const past = new Date(isoString);
+        const diffMs = now - past;
+        const diffSec = Math.floor(diffMs / 1000);
+        const diffMin = Math.floor(diffSec / 60);
+        const diffHour = Math.floor(diffMin / 60);
+        const diffDay = Math.floor(diffHour / 24);
+        const diffWeek = Math.floor(diffDay / 7);
+        const diffMonth = Math.floor(diffDay / 30);
+        const diffYear = Math.floor(diffDay / 365);
+
+        if (diffSec < 60)   return 'baru saja';
+        if (diffMin < 60)   return diffMin + ' menit lalu';
+        if (diffHour < 24)  return diffHour + ' jam lalu';
+        if (diffDay < 7)    return diffDay + ' hari lalu';
+        if (diffWeek < 4)   return diffWeek + ' minggu lalu';
+        if (diffMonth < 12) return diffMonth + ' bulan lalu';
+        return diffYear + ' tahun lalu';
+    }
+
+    function updateTimeAgo() {
+        document.querySelectorAll('.article-time-ago[data-created]').forEach(el => {
+            const iso = el.getAttribute('data-created');
+            if (iso) el.innerText = timeAgo(iso);
         });
-    });
+    }
+
+    updateTimeAgo();
+    setInterval(updateTimeAgo, 60000); // update setiap 60 detik
 
     // 4. Modal Live Article Preview
     const previewModal = document.getElementById('previewModal');

@@ -44,11 +44,11 @@
                             Kategori <i class="fas fa-chevron-down" style="font-size: 11px; margin-left: 4px;"></i>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="{{ url('/?category=Lifestyle#latest') }}" class="dropdown-item nav-cat-item" data-category="lifestyle"><i class="fas fa-leaf"></i> Lifestyle</a></li>
-                            <li><a href="{{ url('/?category=Travel#latest') }}" class="dropdown-item nav-cat-item" data-category="travel"><i class="fas fa-plane"></i> Travel</a></li>
-                            <li><a href="{{ url('/?category=Productivity#latest') }}" class="dropdown-item nav-cat-item" data-category="productivity"><i class="fas fa-bolt"></i> Productivity</a></li>
-                            <li><a href="{{ url('/?category=Personal Growth#latest') }}" class="dropdown-item nav-cat-item" data-category="personal-growth"><i class="fas fa-seedling"></i> Personal Growth</a></li>
-                            <li><a href="{{ url('/?category=Technology#latest') }}" class="dropdown-item nav-cat-item" data-category="technology"><i class="fas fa-laptop-code"></i> Technology</a></li>
+                            <li><a href="{{ route('category.show', 'lifestyle') }}" class="dropdown-item nav-cat-item" data-category="lifestyle"><i class="fas fa-leaf"></i> Lifestyle</a></li>
+                            <li><a href="{{ route('category.show', 'travel') }}" class="dropdown-item nav-cat-item" data-category="travel"><i class="fas fa-plane"></i> Travel</a></li>
+                            <li><a href="{{ route('category.show', 'productivity') }}" class="dropdown-item nav-cat-item" data-category="productivity"><i class="fas fa-bolt"></i> Productivity</a></li>
+                            <li><a href="{{ route('category.show', 'personal-growth') }}" class="dropdown-item nav-cat-item" data-category="personal-growth"><i class="fas fa-seedling"></i> Personal Growth</a></li>
+                            <li><a href="{{ route('category.show', 'technology') }}" class="dropdown-item nav-cat-item" data-category="technology"><i class="fas fa-laptop-code"></i> Technology</a></li>
                         </ul>
                     </li>
                     <li class="nav-item"><a href="#latest" class="scroll-link">Latest Articles</a></li>
@@ -80,11 +80,11 @@
                 <li><a href="{{ url('/') }}" class="mobile-nav-link active"><i class="fas fa-home"></i> Home</a></li>
                 <li><a href="#latest" class="mobile-nav-link scroll-link"><i class="fas fa-newspaper"></i> Latest Articles</a></li>
                 <li style="padding: 10px 16px 4px; font-size: 11px; font-weight: 700; color: var(--c-text-muted); text-transform: uppercase; letter-spacing: 0.8px;">Kategori Berita</li>
-                <li><a href="{{ url('/?category=Lifestyle#latest') }}" class="mobile-nav-link nav-cat-item" data-category="lifestyle"><i class="fas fa-leaf"></i> Lifestyle</a></li>
-                <li><a href="{{ url('/?category=Travel#latest') }}" class="mobile-nav-link nav-cat-item" data-category="travel"><i class="fas fa-plane"></i> Travel</a></li>
-                <li><a href="{{ url('/?category=Productivity#latest') }}" class="mobile-nav-link nav-cat-item" data-category="productivity"><i class="fas fa-bolt"></i> Productivity</a></li>
-                <li><a href="{{ url('/?category=Personal Growth#latest') }}" class="mobile-nav-link nav-cat-item" data-category="personal-growth"><i class="fas fa-seedling"></i> Personal Growth</a></li>
-                <li><a href="{{ url('/?category=Technology#latest') }}" class="mobile-nav-link nav-cat-item" data-category="technology"><i class="fas fa-laptop-code"></i> Technology</a></li>
+                <li><a href="{{ route('category.show', 'lifestyle') }}" class="mobile-nav-link nav-cat-item" data-category="lifestyle"><i class="fas fa-leaf"></i> Lifestyle</a></li>
+                <li><a href="{{ route('category.show', 'travel') }}" class="mobile-nav-link nav-cat-item" data-category="travel"><i class="fas fa-plane"></i> Travel</a></li>
+                <li><a href="{{ route('category.show', 'productivity') }}" class="mobile-nav-link nav-cat-item" data-category="productivity"><i class="fas fa-bolt"></i> Productivity</a></li>
+                <li><a href="{{ route('category.show', 'personal-growth') }}" class="mobile-nav-link nav-cat-item" data-category="personal-growth"><i class="fas fa-seedling"></i> Personal Growth</a></li>
+                <li><a href="{{ route('category.show', 'technology') }}" class="mobile-nav-link nav-cat-item" data-category="technology"><i class="fas fa-laptop-code"></i> Technology</a></li>
                 <li><a href="#about" class="mobile-nav-link scroll-link"><i class="fas fa-user"></i> About</a></li>
                 <li><a href="{{ route('dashboard.index') }}" class="mobile-nav-link" style="color: var(--c-teal); font-weight: 600;"><i class="fas fa-sliders-h"></i> Dashboard</a></li>
             </ul>
@@ -191,5 +191,38 @@
 
     <!-- Main JavaScript -->
     <script src="{{ asset('js/main.js') }}"></script>
+
+    <!-- Realtime Time Ago Script -->
+    <script>
+        function timeAgo(isoString) {
+            const now = new Date();
+            const past = new Date(isoString);
+            const diffSec = Math.floor((now - past) / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHour = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHour / 24);
+            const diffWeek = Math.floor(diffDay / 7);
+            const diffMonth = Math.floor(diffDay / 30);
+            const diffYear = Math.floor(diffDay / 365);
+
+            if (diffSec < 60)   return 'baru saja';
+            if (diffMin < 60)   return diffMin + ' menit lalu';
+            if (diffHour < 24)  return diffHour + ' jam lalu';
+            if (diffDay < 7)    return diffDay + ' hari lalu';
+            if (diffWeek < 4)   return diffWeek + ' minggu lalu';
+            if (diffMonth < 12) return diffMonth + ' bulan lalu';
+            return diffYear + ' tahun lalu';
+        }
+
+        function updateAllTimeAgo() {
+            document.querySelectorAll('.article-time-ago[data-created]').forEach(el => {
+                const iso = el.getAttribute('data-created');
+                if (iso) el.textContent = timeAgo(iso);
+            });
+        }
+
+        updateAllTimeAgo();
+        setInterval(updateAllTimeAgo, 60000);
+    </script>
 </body>
 </html>

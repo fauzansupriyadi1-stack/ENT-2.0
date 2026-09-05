@@ -6,6 +6,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/category/{slug}', [HomeController::class, 'category'])->name('category.show');
 Route::get('/article/{slug}', [HomeController::class, 'show'])->name('article.show');
 Route::post('/subscribe', [HomeController::class, 'subscribe'])->name('subscribe');
 
@@ -18,8 +19,8 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Dashboard Management Routes
-Route::prefix('dashboard')->group(function () {
+// Dashboard Management Routes (Protected by Auth Middleware)
+Route::middleware('auth')->prefix('dashboard')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
     Route::get('/articles/create', [DashboardController::class, 'create'])->name('dashboard.create');
     Route::post('/articles', [DashboardController::class, 'store'])->name('dashboard.store');

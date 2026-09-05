@@ -17,7 +17,7 @@
                 <span class="read-time-pill" style="font-weight: 600;">#{{ $article->secondary_tag }}</span>
             @endif
             <span style="color: var(--c-text-muted);">&bull;</span>
-            <span style="color: var(--c-text-muted); font-size: 14px;">{{ $article->date }}</span>
+            <span class="article-time-ago" data-created="{{ $article->created_at?->toIso8601String() }}" title="{{ $article->formatted_date }}" style="color: var(--c-text-muted); font-size: 14px; cursor: default;">{{ $article->time_ago }}</span>
             <span style="color: var(--c-text-muted);">&bull;</span>
             <span style="color: var(--c-text-muted); font-size: 14px;"><i class="far fa-clock"></i> {{ $article->read_time }}</span>
         </div>

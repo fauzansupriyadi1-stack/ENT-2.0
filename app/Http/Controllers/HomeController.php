@@ -8,14 +8,23 @@ use Illuminate\Support\Str;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+    public function category(Request $request, $slug)
     {
-        $selectedCategory = $request->query('category');
+        return $this->index($request, $slug);
+    }
+
+    public function index(Request $request, $categorySlug = null)
+    {
+        $selectedCategory = $categorySlug ?: $request->query('category');
 
         $allArticles = Article::latest()->get();
 
         if (!empty($selectedCategory) && strtolower($selectedCategory) !== 'all') {
-            $gridArticles = Article::where('category', 'like', "%{$selectedCategory}%")->latest()->get();
+            // Konversi slug ke spasi (misal: "morning-habits" -> "morning habits")
+            $searchTerm = strtolower(str_replace('-', ' ', $selectedCategory));
+            $gridArticles = Article::whereRaw('LOWER(category) = ?', [$searchTerm])
+                ->orWhereRaw("LOWER(REPLACE(category, ' ', '-')) = ?", [strtolower($selectedCategory)])
+                ->latest()->get();
         } else {
             $gridArticles = $allArticles->count() > 1 ? $allArticles->slice(1) : $allArticles;
         }

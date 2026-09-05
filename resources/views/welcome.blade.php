@@ -5,7 +5,10 @@
     
     @php
         $featured = $allArticles->first();
-        $gridArticles = $allArticles->count() > 1 ? $allArticles->slice(1) : $allArticles;
+        // Jangan override $gridArticles jika sudah difilter oleh controller (ada selectedCategory)
+        if (empty($selectedCategory) || strtolower($selectedCategory) === 'all') {
+            $gridArticles = $allArticles->count() > 1 ? $allArticles->slice(1) : $allArticles;
+        }
     @endphp
 
     <!-- Hero Section -->
@@ -54,7 +57,7 @@
             </div>
             <div class="section-filter-status">
                 @if(!empty($selectedCategory) && strtolower($selectedCategory) !== 'all')
-                    <span id="active-filter-label">Kategori: <strong>{{ ucfirst($selectedCategory) }}</strong> ({{ $gridArticles->count() }})</span>
+                    <span id="active-filter-label">Kategori: <strong>{{ ucwords(str_replace('-', ' ', $selectedCategory)) }}</strong> ({{ $gridArticles->count() }})</span>
                     <a href="{{ url('/') }}#latest" class="reset-filter-btn" style="margin-left: 12px; font-size: 12px; background: var(--c-teal-light); color: var(--c-teal); padding: 5px 14px; border-radius: 99px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
                         <i class="fas fa-times"></i> Reset Filter
                     </a>
@@ -74,7 +77,7 @@
                     <div class="card-body">
                         <div class="card-meta">
                             <span class="read-duration"><i class="far fa-clock"></i> {{ $article->read_time }}</span>
-                            <span class="post-date">{{ $article->date }}</span>
+                            <span class="post-date article-time-ago" data-created="{{ $article->created_at?->toIso8601String() }}" title="{{ $article->formatted_date }}">{{ $article->time_ago }}</span>
                         </div>
                         <h3 class="card-title">
                             <a href="{{ route('article.show', $article->slug) }}">{{ $article->title }}</a>
