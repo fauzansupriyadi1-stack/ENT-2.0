@@ -3,11 +3,12 @@
 @section('content')
 <div class="container">
     
+
+
     @php
         $featured = $allArticles->first();
-        // Jangan override $gridArticles jika sudah difilter oleh controller (ada selectedCategory)
         if (empty($selectedCategory) || strtolower($selectedCategory) === 'all') {
-            $gridArticles = $allArticles->count() > 1 ? $allArticles->slice(1) : $allArticles;
+            $gridArticles = $allArticles->slice(1)->whenEmpty(fn() => $allArticles);
         }
     @endphp
 
@@ -16,7 +17,7 @@
         <div class="hero-content">
             <div class="tag-badge-row">
                 <span class="tag-new"><i class="fas fa-sparkles" style="margin-right: 4px;"></i> FEATURED STORY</span>
-                <span class="read-time-pill"><i class="far fa-clock"></i> {{ $featured ? $featured->time_ago : 'Baru saja' }}</span>
+                <span class="read-time-pill"><i class="far fa-clock"></i> {{ $featured?->time_ago ?? 'Baru saja' }}</span>
             </div>
 
             <h1 class="hero-title">Selamat Datang di FZAN NEWS</h1>
@@ -33,7 +34,7 @@
                         <span class="tag">{{ strtoupper($featured->category) }}</span>
                     </div>
                     <h3><a href="{{ route('article.show', $featured->slug) }}" style="color: inherit;">{{ $featured->title }}</a></h3>
-                    <p>{{ Str::limit($featured->excerpt, 100) }}</p>
+                    <p>{{ $featured->excerpt }}</p>
                     <div class="hero-author">
                         <div class="author-info">
                             <img src="{{ $featured->author_avatar ?: 'https://i.pravatar.cc/100?img=5' }}" alt="{{ $featured->author_name }}" class="author-avatar">
@@ -82,7 +83,7 @@
                         <h3 class="card-title">
                             <a href="{{ route('article.show', $article->slug) }}">{{ $article->title }}</a>
                         </h3>
-                        <p class="card-excerpt">{{ Str::limit($article->excerpt, 110) }}</p>
+                        <p class="card-excerpt">{{ $article->excerpt }}</p>
                         <div class="card-footer">
                             <div class="author-row">
                                 <img src="{{ $article->author_avatar ?: 'https://i.pravatar.cc/100?img=1' }}" alt="{{ $article->author_name }}" class="author-avatar-sm">

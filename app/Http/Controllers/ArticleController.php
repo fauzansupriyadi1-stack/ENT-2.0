@@ -82,8 +82,23 @@ class ArticleController extends Controller
         // LANGKAH 2: Upload file gambar ke server
         $validated['image'] = $this->handleImageUpload($request);
 
+
+
+
+
+
+
+
+
         // LANGKAH 3: Otomatis buat ringkasan 10 kata (Excerpt)
         $validated['excerpt'] = $this->generateExcerpt($validated['content']);
+
+
+
+
+
+
+
 
         // LANGKAH 4: Buat Slug URL & tanggal otomatis
         $validated['slug'] = Str::slug($validated['title']) . '-' . time();
@@ -192,6 +207,11 @@ class ArticleController extends Controller
     /**
      * Otomatis Membuat Excerpt (10 Kata Pertama dari Konten Berita)
      */
+ 
+ 
+ 
+ 
+ 
     private function generateExcerpt(string $content): string
     {
         $cleanContent = strip_tags($content);
