@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
+/**
+ * MODEL ARTICLE
+ * Model ini mewakili tabel 'articles' di database.
+ */
 class Article extends Model
 {
     use HasFactory;
 
+    // Kolom-kolom yang diizinkan untuk diisi secara langsung (Mass Assignment)
     protected $fillable = [
         'title',
         'slug',
@@ -20,20 +25,19 @@ class Article extends Model
         'author_avatar',
         'author_role',
         'date',
-        'read_time',
         'excerpt',
         'content',
-        'image',
-        'likes'
+        'image'
     ];
 
+    // Konversi tipe data otomatis (Casting)
     protected $casts = [
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
 
     /**
-     * Waktu relatif: "2 jam lalu", "baru saja", dst.
+     * ACCESSOR: Menghasilkan format waktu relatif (misal: "2 jam lalu")
      */
     public function getTimeAgoAttribute(): string
     {
@@ -42,7 +46,7 @@ class Article extends Model
     }
 
     /**
-     * Tanggal format panjang: "5 Sep 2026, 12:04"
+     * ACCESSOR: Menghasilkan format tanggal yang rapi (misal: "05 Sep 2026, 12:00")
      */
     public function getFormattedDateAttribute(): string
     {
@@ -50,10 +54,15 @@ class Article extends Model
         return Carbon::parse($timestamp)->locale('id')->translatedFormat('d M Y, H:i');
     }
 
+    /**
+     * MODEL EVENT (BOOT)
+     * Logika otomatis sebelum data disimpan ke database.
+     */
     protected static function boot()
     {
         parent::boot();
 
+        // Sebelum data baru dibuat (Creating)
         static::creating(function ($article) {
             if (empty($article->slug)) {
                 $article->slug = Str::slug($article->title) . '-' . time();
@@ -66,6 +75,7 @@ class Article extends Model
             }
         });
 
+        // Sebelum data diperbarui (Updating)
         static::updating(function ($article) {
             if ($article->isDirty('title') && empty($article->slug)) {
                 $article->slug = Str::slug($article->title) . '-' . time();

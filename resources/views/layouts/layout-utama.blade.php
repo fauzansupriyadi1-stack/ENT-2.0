@@ -53,7 +53,7 @@
                     </li>
                     <li class="nav-item"><a href="#latest" class="scroll-link">Latest Articles</a></li>
                     <li class="nav-item"><a href="#about" class="scroll-link">About</a></li>
-                    <li class="nav-item"><a href="{{ route('dashboard.index') }}" style="font-weight: 600; color: var(--c-teal);"><i class="fas fa-sliders-h" style="margin-right: 4px;"></i> Dashboard</a></li>
+                    <li class="nav-item"><a href="{{ route('dashboard.daftar-artikel') }}" style="font-weight: 600; color: var(--c-teal);"><i class="fas fa-sliders-h" style="margin-right: 4px;"></i> Dashboard</a></li>
                 </ul>
             </nav>
 
@@ -86,7 +86,7 @@
                 <li><a href="{{ route('category.show', 'personal-growth') }}" class="mobile-nav-link nav-cat-item" data-category="personal-growth"><i class="fas fa-seedling"></i> Personal Growth</a></li>
                 <li><a href="{{ route('category.show', 'technology') }}" class="mobile-nav-link nav-cat-item" data-category="technology"><i class="fas fa-laptop-code"></i> Technology</a></li>
                 <li><a href="#about" class="mobile-nav-link scroll-link"><i class="fas fa-user"></i> About</a></li>
-                <li><a href="{{ route('dashboard.index') }}" class="mobile-nav-link" style="color: var(--c-teal); font-weight: 600;"><i class="fas fa-sliders-h"></i> Dashboard</a></li>
+                <li><a href="{{ route('dashboard.daftar-artikel') }}" class="mobile-nav-link" style="color: var(--c-teal); font-weight: 600;"><i class="fas fa-sliders-h"></i> Dashboard</a></li>
             </ul>
             <div class="mobile-drawer-footer">
                 <a href="{{ url('/login') }}" class="btn-subscribe btn-block" style="text-align: center;">
@@ -114,13 +114,6 @@
                 </button>
             </div>
             <div class="search-modal-body">
-                <div class="search-quick-tags">
-                    <span class="quick-tags-label">Popular:</span>
-                    <button class="quick-tag-pill" data-query="Morning">Morning</button>
-                    <button class="quick-tag-pill" data-query="Travel">Travel</button>
-                    <button class="quick-tag-pill" data-query="Focus">Productivity</button>
-                    <button class="quick-tag-pill" data-query="Lifestyle">Lifestyle</button>
-                </div>
                 <div class="search-results-list" id="search-results-list">
                     <!-- Search items rendered dynamically via JS -->
                 </div>
@@ -192,37 +185,6 @@
     <!-- Main JavaScript -->
     <script src="{{ asset('js/main.js') }}"></script>
 
-    <!-- Realtime Time Ago Script -->
-    <script>
-        function timeAgo(isoString) {
-            const now = new Date();
-            const past = new Date(isoString);
-            const diffSec = Math.floor((now - past) / 1000);
-            const diffMin = Math.floor(diffSec / 60);
-            const diffHour = Math.floor(diffMin / 60);
-            const diffDay = Math.floor(diffHour / 24);
-            const diffWeek = Math.floor(diffDay / 7);
-            const diffMonth = Math.floor(diffDay / 30);
-            const diffYear = Math.floor(diffDay / 365);
 
-            if (diffSec < 60)   return 'baru saja';
-            if (diffMin < 60)   return diffMin + ' menit lalu';
-            if (diffHour < 24)  return diffHour + ' jam lalu';
-            if (diffDay < 7)    return diffDay + ' hari lalu';
-            if (diffWeek < 4)   return diffWeek + ' minggu lalu';
-            if (diffMonth < 12) return diffMonth + ' bulan lalu';
-            return diffYear + ' tahun lalu';
-        }
-
-        function updateAllTimeAgo() {
-            document.querySelectorAll('.article-time-ago[data-created]').forEach(el => {
-                const iso = el.getAttribute('data-created');
-                if (iso) el.textContent = timeAgo(iso);
-            });
-        }
-
-        updateAllTimeAgo();
-        setInterval(updateAllTimeAgo, 60000);
-    </script>
 </body>
 </html>

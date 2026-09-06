@@ -10,7 +10,7 @@
         </h1>
         <p style="color: #64748b; font-size: 14px;">Lengkapi formulir di bawah ini. Anda dapat melihat pratinjau langsung di sebelah kanan.</p>
     </div>
-    <a href="{{ route('dashboard.index') }}" style="background: #f1f5f9; color: #475569; padding: 10px 20px; border-radius: 99px; font-weight: 600; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
+    <a href="{{ route('dashboard.daftar-artikel') }}" style="background: #f1f5f9; color: #475569; padding: 10px 20px; border-radius: 99px; font-weight: 600; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 8px;">
         <i class="fas fa-arrow-left"></i> Kembali ke Daftar
     </a>
 </div>
@@ -19,7 +19,7 @@
 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 28px; align-items: start;">
     <!-- Form Card -->
     <div style="background: #ffffff; border-radius: 16px; padding: 28px; box-shadow: 0 4px 16px rgba(0,0,0,0.03); border: 1px solid #e2e8f0;">
-        <form action="{{ $isEdit ? route('dashboard.update', $article->id) : route('dashboard.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ $isEdit ? route('dashboard.update-artikel', $article->id) : route('dashboard.simpan-artikel') }}" method="POST" enctype="multipart/form-data">
             @csrf
             @if($isEdit)
                 @method('PUT')
@@ -37,29 +37,19 @@
                     @enderror
                 </div>
 
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px;">
-                    <!-- Kategori -->
-                    <div>
-                        <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #0f172a;">
-                            Kategori Utama <span style="color: #ef4444;">*</span>
-                        </label>
-                        <select name="category" id="formCategorySelect" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; outline: none; font-family: inherit;">
-                            @php
-                                $cats = ['Lifestyle', 'Travel', 'Productivity', 'Personal Growth', 'Technology', 'Health', 'Fashion', 'Art', 'Sports'];
-                            @endphp
-                            @foreach($cats as $cat)
-                                <option value="{{ $cat }}" {{ old('category', $article->category) == $cat ? 'selected' : '' }}>{{ $cat }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Secondary Tag -->
-                    <div>
-                        <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #0f172a;">
-                            Tag Sekunder
-                        </label>
-                        <input type="text" name="secondary_tag" value="{{ old('secondary_tag', $article->secondary_tag) }}" placeholder="Contoh: Deep Work, Wellness" style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; font-family: inherit;">
-                    </div>
+                <!-- Kategori -->
+                <div>
+                    <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #0f172a;">
+                        Kategori Artikel <span style="color: #ef4444;">*</span>
+                    </label>
+                    <select name="category" id="formCategorySelect" required style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; background: #fff; outline: none; font-family: inherit;">
+                        @php
+                            $cats = ['Lifestyle', 'Travel', 'Productivity', 'Personal Growth', 'Technology', 'Health', 'Fashion', 'Art', 'Sports'];
+                        @endphp
+                        @foreach($cats as $cat)
+                            <option value="{{ $cat }}" {{ old('category', $article->category) == $cat ? 'selected' : '' }}>{{ $cat }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 16px;">
@@ -77,14 +67,6 @@
                             Jabatan Penulis
                         </label>
                         <input type="text" name="author_role" value="{{ old('author_role', $article->author_role ?: 'Editor') }}" placeholder="Editor in Chief" style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; font-family: inherit;">
-                    </div>
-
-                    <!-- Waktu Baca -->
-                    <div>
-                        <label style="display: block; font-weight: 600; font-size: 14px; margin-bottom: 8px; color: #0f172a;">
-                            Waktu Baca
-                        </label>
-                        <input type="text" name="read_time" value="{{ old('read_time', $article->read_time ?: '5 min read') }}" placeholder="5 min read" style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; font-family: inherit;">
                     </div>
                 </div>
 
@@ -104,19 +86,7 @@
                     @error('image_file')
                         <span style="color: #ef4444; font-size: 12.5px; margin-top: 4px; display: block;">{{ $message }}</span>
                     @enderror
-
-                    <!-- Divider Atau -->
-                    <div style="display: flex; align-items: center; margin: 12px 0; gap: 12px;">
-                        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
-                        <span style="font-size: 12px; color: #94a3b8; font-weight: 600; text-transform: uppercase;">Atau Link URL</span>
-                        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
                     </div>
-
-                    <!-- URL Input -->
-                    <input type="text" name="image" id="formImageInput" value="{{ old('image', $article->image) }}" placeholder="https://images.unsplash.com/..." style="width: 100%; padding: 12px 16px; border: 1.5px solid #cbd5e1; border-radius: 10px; font-size: 14px; outline: none; font-family: inherit;">
-                    @error('image')
-                        <span style="color: #ef4444; font-size: 12.5px; margin-top: 4px; display: block;">{{ $message }}</span>
-                    @enderror
                 </div>
 
 
@@ -131,7 +101,7 @@
 
                 <!-- Submit Buttons -->
                 <div style="display: flex; gap: 12px; justify-content: flex-end; padding-top: 16px; border-top: 1px solid #f1f5f9;">
-                    <a href="{{ route('dashboard.index') }}" style="background: #f1f5f9; color: #475569; padding: 12px 24px; border-radius: 99px; font-weight: 600; text-decoration: none; font-size: 14px;">Batal</a>
+                    <a href="{{ route('dashboard.daftar-artikel') }}" style="background: #f1f5f9; color: #475569; padding: 12px 24px; border-radius: 99px; font-weight: 600; text-decoration: none; font-size: 14px;">Batal</a>
                     <button type="submit" style="background: var(--c-teal); color: #ffffff; border: none; padding: 12px 32px; border-radius: 99px; font-weight: 600; font-size: 15px; cursor: pointer; box-shadow: 0 4px 14px rgba(7, 102, 83, 0.3); display: inline-flex; align-items: center; gap: 8px;">
                         <i class="fas fa-paper-plane"></i> {{ $isEdit ? 'Simpan Perubahan' : 'Terbitkan Artikel' }}
                     </button>
@@ -181,7 +151,6 @@
     const titleInput = document.getElementById('formTitleInput');
     const categorySelect = document.getElementById('formCategorySelect');
     const authorInput = document.getElementById('formAuthorInput');
-    const imageInput = document.getElementById('formImageInput');
     const imageFileInput = document.getElementById('formImageFileInput');
     const uploadFileName = document.getElementById('uploadFileName');
     const dropZone = document.getElementById('dropZone');
@@ -251,14 +220,6 @@
                 imageFileInput.files = files;
                 const event = new Event('change');
                 imageFileInput.dispatchEvent(event);
-            }
-        });
-    }
-
-    if (imageInput) {
-        imageInput.addEventListener('input', (e) => {
-            if (e.target.value) {
-                pImage.src = e.target.value;
             }
         });
     }

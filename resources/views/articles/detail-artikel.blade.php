@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.layout-utama')
 
 @section('title', $article->title . ' | FZAN NEWS')
 
@@ -13,13 +13,8 @@
     <article class="article-header">
         <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap;">
             <span class="tag-new" style="font-size: 12px;">{{ strtoupper($article->category) }}</span>
-            @if($article->secondary_tag)
-                <span class="read-time-pill" style="font-weight: 600;">#{{ $article->secondary_tag }}</span>
-            @endif
             <span style="color: var(--c-text-muted);">&bull;</span>
-            <span class="article-time-ago" data-created="{{ $article->created_at?->toIso8601String() }}" title="{{ $article->formatted_date }}" style="color: var(--c-text-muted); font-size: 14px; cursor: default;">{{ $article->time_ago }}</span>
-            <span style="color: var(--c-text-muted);">&bull;</span>
-            <span style="color: var(--c-text-muted); font-size: 14px;"><i class="far fa-clock"></i> {{ $article->read_time }}</span>
+            <span class="article-time-ago" data-created="{{ $article->created_at?->toIso8601String() }}" title="{{ $article->formatted_date }}" style="color: var(--c-text-muted); font-size: 14px; cursor: default;"><i class="far fa-clock" style="margin-right: 4px;"></i> {{ $article->time_ago }}</span>
         </div>
 
         <h1 class="hero-title" style="font-size: 42px; text-align: left; margin-bottom: 24px; line-height: 1.2;">{{ $article->title }}</h1>
@@ -71,7 +66,7 @@
                         </div>
                         <div class="card-body">
                             <div class="card-meta">
-                                <span class="read-duration"><i class="far fa-clock"></i> {{ $related->read_time }}</span>
+                                <span class="read-duration"><i class="far fa-clock"></i> {{ $related->time_ago }}</span>
                             </div>
                             <h3 class="card-title" style="font-size: 16px;">
                                 <a href="{{ route('article.show', $related->slug) }}">{{ $related->title }}</a>

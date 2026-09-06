@@ -398,8 +398,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div style="padding: 32px 36px;">
                 <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 12px;">
                     <span class="tag-new" style="background-color: var(--c-light-green); color: var(--c-teal); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px;">${article.category}</span>
-                    <span style="font-size: 13px; color: var(--c-text-muted);"><i class="far fa-clock"></i> ${article.readTime}</span>
-                    <span style="font-size: 13px; color: var(--c-text-muted);">&bull; ${article.date}</span>
+                    <span style="font-size: 13px; color: var(--c-text-muted);"><i class="far fa-calendar-alt"></i> ${article.date}</span>
                 </div>
                 <h2 style="font-family: var(--font-serif); font-size: 32px; line-height: 1.25; margin-bottom: 20px; color: var(--c-text-main);">${article.title}</h2>
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid var(--c-border);">
@@ -414,9 +413,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <div style="margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--c-border); display: flex; justify-content: space-between; align-items: center;">
                     <div style="display: flex; gap: 12px;">
-                        <button class="btn-like liked" style="background-color: var(--c-teal-light); color: var(--c-teal); padding: 8px 16px; border-radius: 20px; font-weight: 600;">
-                            <i class="fas fa-heart" style="color: #e53935; margin-right: 6px;"></i> Applaud
-                        </button>
                         <button class="btn-outline" onclick="showToast('Story link copied to clipboard!');" style="padding: 8px 16px; font-size: 13px;">
                             <i class="fas fa-share-alt" style="margin-right: 6px;"></i> Share
                         </button>
@@ -537,8 +533,7 @@ document.addEventListener('DOMContentLoaded', () => {
             searchResultsList.innerHTML = `
                 <div style="text-align: center; padding: 30px 10px; color: var(--c-text-muted);">
                     <i class="fas fa-search" style="font-size: 24px; color: var(--c-text-light); margin-bottom: 10px; display: block;"></i>
-                    <p style="font-size: 14px;">No matching stories found for "<strong>${query}</strong>".</p>
-                    <span style="font-size: 12px; color: var(--c-text-light);">Try searching for Lifestyle, Morning, or Focus.</span>
+                    <p style="font-size: 14px;">Tidak ditemukan berita untuk kata kunci "<strong>${query}</strong>".</p>
                 </div>
             `;
             return;
@@ -550,7 +545,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="flex: 1; min-width: 0;">
                     <div style="font-size: 10.5px; font-weight: 700; color: var(--c-teal); text-transform: uppercase;">${art.category}</div>
                     <div style="font-weight: 600; font-size: 14px; color: var(--c-text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${art.title}</div>
-                    <div style="font-size: 11.5px; color: var(--c-text-muted);">${art.author} &bull; ${art.readTime}</div>
+                    <div style="font-size: 11.5px; color: var(--c-text-muted);">${art.author}</div>
                 </div>
                 <i class="fas fa-arrow-right" style="font-size: 12px; color: var(--c-teal); margin-left: 8px;"></i>
             </div>

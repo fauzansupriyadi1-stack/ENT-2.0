@@ -7,17 +7,17 @@ use App\Models\Article;
 use Illuminate\Support\Str;
 
 /**
- * DASHBOARD CONTROLLER
- * Mengelola seluruh fitur CRUD (Create, Read, Update, Delete) artikel dan statistik di area Admin Dashboard.
+ * ARTICLE CONTROLLER (ADMIN)
+ * Mengelola pengelolaan data artikel (CRUD) di area Dashboard Admin.
  */
-class DashboardController extends Controller
+class ArticleController extends Controller
 {
     /**
-     * MENAMPILKAN DAFTAR ARTIKEL & STATISTIK (READ)
+     * MENAMPILKAN DAFTAR ARTIKEL & PENCARIAN DI DASHBOARD (READ)
      */
     public function index(Request $request)
     {
-        // 1. Buat Query dasar untuk mengambil Artikel
+        // 1. Inisialisasi Query Artikel
         $query = Article::query();
 
         // 2. Filter berdasarkan Kategori (jika dipilih)
@@ -25,32 +25,32 @@ class DashboardController extends Controller
             $query->where('category', $request->category);
         }
 
-        // 3. Filter berdasarkan Kata Kunci Pencarian (Search)
+        // 3. Filter Pencarian (Judul, Kategori, atau Penulis)
         if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('title', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%")
-                  ->orWhere('author_name', 'like', "%{$search}%");
+            $s = "%{$request->search}%";
+            $query->where(function ($q) use ($s) {
+                $q->where('title', 'like', $s)
+                  ->orWhere('category', 'like', $s)
+                  ->orWhere('author_name', 'like', $s);
             });
         }
 
-        // 4. Ambil Data Artikel (Urutkan dari yang terbaru, 10 item per halaman)
+        // 4. Ambil data artikel terbaru (10 artikel per halaman)
         $articles = $query->latest()->paginate(10)->withQueryString();
 
-        // 5. Hitung Statistik Ringkasan
+        // 5. Hitung Ringkasan Statistik Dashboard
         $stats = [
             'total_articles'   => Article::count(),
             'total_categories' => Article::distinct('category')->count('category')
         ];
 
-        // 6. Ambil Daftar Kategori Unik untuk Filter
+        // 6. Ambil daftar kategori unik untuk tombol filter
         $categories = Article::distinct()->pluck('category');
 
         $activeCategory = $request->get('category', 'all');
         $activeSearch   = $request->get('search', '');
 
-        // 7. Kirim data ke View Dashboard
+        // 7. Kirim data ke View Dashboard Admin
         return view('dashboard.daftar-artikel', compact(
             'articles', 
             'stats', 
@@ -76,23 +76,23 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        // LANGKAH 1: Validasi Input dari Form
+        // LANGKAH 1: Validasi input form
         $validated = $this->validateArticle($request);
 
-        // LANGKAH 2: Upload Gambar (jika ada file yang diunggah)
-        $validated['image'] = $this->handleImageUpload($request, $validated['image'] ?? null);
+        // LANGKAH 2: Upload file gambar ke server
+        $validated['image'] = $this->handleImageUpload($request);
 
-        // LANGKAH 3: Auto-generate Excerpt (Ringkasan 10 Kata Pertama)
+        // LANGKAH 3: Otomatis buat ringkasan 10 kata (Excerpt)
         $validated['excerpt'] = $this->generateExcerpt($validated['content']);
 
-        // LANGKAH 4: Buat Slug URL & Tanggal
+        // LANGKAH 4: Buat Slug URL & tanggal otomatis
         $validated['slug'] = Str::slug($validated['title']) . '-' . time();
         $validated['date'] = now()->format('M d, Y');
 
         // LANGKAH 5: Simpan ke Database
         Article::create($validated);
 
-        // LANGKAH 6: Kembali ke Dashboard dengan Pesan Sukses
+        // LANGKAH 6: Redirect ke Dashboard dengan notifikasi sukses
         return redirect()->route('dashboard.daftar-artikel')->with('success', 'Artikel berhasil ditambahkan!');
     }
 
@@ -110,31 +110,31 @@ class DashboardController extends Controller
     }
 
     /**
-     * MEMPERBARUI DATA ARTIKEL (UPDATE)
+     * MEMPERBARUI ARTIKEL (UPDATE)
      */
     public function update(Request $request, $id)
     {
-        // LANGKAH 1: Cari Artikel berdasarkan ID
+        // LANGKAH 1: Cari artikel berdasarkan ID
         $article = Article::findOrFail($id);
 
-        // LANGKAH 2: Validasi Input Form
+        // LANGKAH 2: Validasi input form
         $validated = $this->validateArticle($request);
 
-        // LANGKAH 3: Upload Gambar Baru (jika ada) atau gunakan gambar lama
+        // LANGKAH 3: Upload gambar baru (jika ada) atau tetap gunakan gambar lama
         $validated['image'] = $this->handleImageUpload($request, $article->image);
 
-        // LANGKAH 4: Hitung Ulang Excerpt (Ringkasan 10 Kata Pertama)
+        // LANGKAH 4: Generate ulang Excerpt 10 kata
         $validated['excerpt'] = $this->generateExcerpt($validated['content']);
 
-        // LANGKAH 5: Update Slug jika Judul berubah
+        // LANGKAH 5: Update Slug jika judul diubah
         if ($article->title !== $validated['title']) {
             $validated['slug'] = Str::slug($validated['title']) . '-' . time();
         }
 
-        // LANGKAH 6: Simpan Perubahan ke Database
+        // LANGKAH 6: Simpan perubahan ke Database
         $article->update($validated);
 
-        // LANGKAH 7: Kembali ke Dashboard
+        // LANGKAH 7: Redirect ke Dashboard
         return redirect()->route('dashboard.daftar-artikel')->with('success', 'Artikel berhasil diperbarui!');
     }
 
@@ -197,9 +197,6 @@ class DashboardController extends Controller
         $cleanContent = strip_tags($content);
         $words = array_filter(explode(' ', preg_replace('/\s+/', ' ', trim($cleanContent))));
 
-        // Ambil 10 kata pertama
         return implode(' ', array_slice($words, 0, 10)) . (count($words) > 10 ? '...' : '');
     }
 }
-
-

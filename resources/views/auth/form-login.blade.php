@@ -210,11 +210,8 @@
                 </div>
             </div>
 
-            <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox" name="remember" checked> Ingat saya
-                </label>
-                <a href="{{ route('dashboard.index') }}" style="color: var(--c-teal); text-decoration: none; font-weight: 500;">Langsung ke Dashboard</a>
+            <div class="form-options" style="justify-content: flex-end;">
+                <a href="{{ route('dashboard.daftar-artikel') }}" style="color: var(--c-teal); text-decoration: none; font-weight: 500;">Langsung ke Dashboard</a>
             </div>
 
             <button type="submit" class="btn-submit">

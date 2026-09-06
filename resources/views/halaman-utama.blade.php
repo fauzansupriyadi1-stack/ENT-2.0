@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.layout-utama')
 
 @section('content')
 <div class="container">
@@ -16,8 +16,9 @@
         <div class="hero-content">
             <div class="tag-badge-row">
                 <span class="tag-new"><i class="fas fa-sparkles" style="margin-right: 4px;"></i> FEATURED STORY</span>
-                <span class="read-time-pill"><i class="far fa-clock"></i> {{ $featured ? $featured->read_time : '5 min read' }}</span>
+                <span class="read-time-pill"><i class="far fa-clock"></i> {{ $featured ? $featured->time_ago : 'Baru saja' }}</span>
             </div>
+
             <h1 class="hero-title">Selamat Datang di FZAN NEWS</h1>
             <p class="hero-desc">Temukan ide, perspektif, dan kisah kurasi yang menginspirasi hari-hari Anda dengan fokus baru dan kejelasan kreatif.</p>
         </div>
@@ -76,8 +77,7 @@
                     </div>
                     <div class="card-body">
                         <div class="card-meta">
-                            <span class="read-duration"><i class="far fa-clock"></i> {{ $article->read_time }}</span>
-                            <span class="post-date article-time-ago" data-created="{{ $article->created_at?->toIso8601String() }}" title="{{ $article->formatted_date }}">{{ $article->time_ago }}</span>
+                            <span class="read-duration article-time-ago" data-created="{{ $article->created_at?->toIso8601String() }}" title="{{ $article->formatted_date }}"><i class="far fa-clock"></i> {{ $article->time_ago }}</span>
                         </div>
                         <h3 class="card-title">
                             <a href="{{ route('article.show', $article->slug) }}">{{ $article->title }}</a>
